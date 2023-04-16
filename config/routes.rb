@@ -1,11 +1,4 @@
 Rails.application.routes.draw do
-  namespace :admin do
-    get 'homes/top'
-  end
-  namespace :public do
-    get 'homes/top'
-    get 'homes/about'
-  end
   devise_for :customers,skip: [:passwords], controllers: {
   registrations: "public/registrations",
   sessions: 'public/sessions'
@@ -16,26 +9,32 @@ devise_for :admin, skip: [:registrations, :passwords] ,controllers: {
 }
 
 scope module: :public do
-    resources :items
-    resources :customers do
-      get 'withdraw' => 'customers#withdraw'
-      patch 'resign' => 'customers#resign'
-    end
-    resources :cart_items
-    post 'cart_items' => 'cart_items#destroy_all'
-    resources :orders
-    resources :shipping_addresses
+  root 'homes#top'
+  get 'about' => 'homes#about'
+  resources :items, only: [:index, :show]
+  resources :customers, only: [:edit] do
+    get 'withdraw' => 'customers#withdraw'
+    patch 'resign' => 'customers#resign'
   end
-  namespace :public do
-    get 'orders/log'
-    get 'orders/completed'
+  resources :cart_items, only: [:index, :update, :destroy, :create]
+  post 'cart_items' => 'cart_items#destroy_all'
+  resources :orders, only: [:new, :create, :index, :show] do
+    get 'log' => 'orders#log'
+    get 'completed' => 'orders#completed'
   end
+  resources :shipping_addresses, only: [:index, :edit, :create, :update, :destroy]
+end
 
   namespace :admin do
-    resources :items
-    resources :customers
-    resources :genres
+    root 'homes#top'
+    resources :items, only: [:index, :new, :create, :show, :edit, :update]
+    resources :genres, only: [:index, :create, :edit, :update]
+    resources :customers, only: [:index, :show, :edit, :update]
+    resources :orders, only: [:show, :update]
+    resources :orders_items, only: [:update]
   end
+
+
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
