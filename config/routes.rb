@@ -12,12 +12,13 @@ scope module: :public do
   root 'homes#top'
   get 'about' => 'homes#about'
   resources :items, only: [:index, :show]
-  resources :customers, only: [:edit] do
-    get 'withdraw' => 'customers#withdraw'
-    patch 'resign' => 'customers#resign'
-  end
+  get 'customers/infomation' => 'customers#show'
+  get 'customers/infomation/edit' => 'customers#edit'
+  patch 'customers/infomation' => 'customers#update'
+  get 'customers/withdraw' => 'customers#withdraw'
+  patch 'customers/resign' => 'customers#resign'
   resources :cart_items, only: [:index, :update, :destroy, :create]
-  post 'cart_items' => 'cart_items#destroy_all'
+  post 'cart_items/destroy_all' => 'cart_items#destroy_all'
   resources :orders, only: [:new, :create, :index, :show] do
     get 'log' => 'orders#log'
     get 'completed' => 'orders#completed'
