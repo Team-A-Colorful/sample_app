@@ -19,7 +19,7 @@ scope module: :public do
   end
 
   resources :cart_items, only: [:index, :update, :destroy, :create] do
-    post 'destroy_all' => 'cart_items#destroy_all'
+    delete 'destroy_all' => 'cart_items#destroy_all'
   end
   resources :orders, only: [:new, :create, :index, :show] do
     get 'confirm' => 'orders#confirm'
